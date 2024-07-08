@@ -429,7 +429,7 @@ MonoBehaviour:
       m_Action: Dodge Input
       m_Flags: 0
     m_Flags: 0
-  maxHealth: 0
+  maxHealth: 5
   moveSpeed: 5
   attackSpeed: 1
   damage: 4
