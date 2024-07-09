@@ -33,7 +33,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private Transform shootingThingy;
     [SerializeField] private PlayerProjectile projectile;
 
-    private void Start()
+    private void Awake()
     {
         CurrentPlayer = this;
         currentHealth = maxHealth;

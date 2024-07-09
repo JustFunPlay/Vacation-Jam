@@ -6,11 +6,13 @@ public class EnemyBase : MonoBehaviour
 {
     [SerializeField] private int health;
     [SerializeField] private float speed;
+    [SerializeField] private int pointRefund = 1;
     private Rigidbody rb;
-    bool canmove = true;
+    bool canmove = false;
 
-    private void Start()
+    public void ReadyUp(int difficultyMod)
     {
+        health = Mathf.RoundToInt(health * 1 + 0.2f * difficultyMod);
         rb = GetComponent<Rigidbody>();
         canmove = true;
     }
@@ -19,7 +21,7 @@ public class EnemyBase : MonoBehaviour
         if (canmove)
         {
             transform.LookAt(PlayerControl.CurrentPlayer.transform.position, Vector3.up);
-            transform.Translate(0, 0, speed * Time.deltaTime);
+            rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
         }
     }
 
@@ -32,6 +34,7 @@ public class EnemyBase : MonoBehaviour
     }
     private void OnDeath()
     {
+        CombatDirector.instance.AddPoints(pointRefund);
         Destroy(gameObject);
     }
     public void GetKnockedBack()
