@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CombatDirector : MonoBehaviour
 {
@@ -11,11 +12,13 @@ public class CombatDirector : MonoBehaviour
     [SerializeField] private int spawnPoints;
     [SerializeField] private SpawnableEnemy[] spawnableEnemies;
     [SerializeField] private TMPro.TextMeshProUGUI timeText;
+    [SerializeField] private GameObject gameOverScreen;
+    [SerializeField] private TMPro.TextMeshProUGUI gameOverText;
 
     private void Start()
     {
         instance = this;
-        difficultyLevel = 1;
+        difficultyLevel = 0;
         spawnPoints = Random.Range(10, 20);
         TrySpawnEnemies();
         StartCoroutine(Director());
@@ -31,7 +34,7 @@ public class CombatDirector : MonoBehaviour
             t++;
             spawnPoints += t % 2;
             if (t % 3 == Random.Range(0, 3))
-                spawnPoints += difficultyLevel;
+                spawnPoints += 2 + difficultyLevel;
             if (t % 5 == 0)
                 TrySpawnEnemies();
             if (t % 60 == 0)
@@ -44,7 +47,7 @@ public class CombatDirector : MonoBehaviour
     {
         spawnPoints += points;
     }
-    public void TrySpawnEnemies()
+    private void TrySpawnEnemies()
     {
         List<SpawnableEnemy> availableSpawns = new List<SpawnableEnemy>();
         for (int i = 0; i < spawnableEnemies.Length; i++)
@@ -70,6 +73,15 @@ public class CombatDirector : MonoBehaviour
             else
                 keepSpawning = false;
         }
+    }
+    public void GameOver()
+    {
+        gameOverScreen.SetActive(true);
+        //gameOverText.text = $"You survived for {difficultyLevel} minutes and {}
+    }
+    public void Exit()
+    {
+        SceneManager.LoadScene(0);
     }
 }
 

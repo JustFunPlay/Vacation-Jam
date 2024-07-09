@@ -9,7 +9,7 @@ public class UpgradeMenu : MonoBehaviour
 
     [SerializeField] private TMPro.TextMeshProUGUI[] upgradeTitles;
     [SerializeField] private TMPro.TextMeshProUGUI[] upgradeDescriptions;
-    [SerializeField] private ScriptableUpgrade[] upgrades;
+    [SerializeField] private List<ScriptableUpgrade> upgrades = new List<ScriptableUpgrade>();
     private List<ScriptableUpgrade> availableUpgrades = new List<ScriptableUpgrade>();
 
     private void Start()
@@ -23,7 +23,7 @@ public class UpgradeMenu : MonoBehaviour
         availableUpgrades.Clear();
         while (availableUpgrades.Count < 3)
         {
-            int u = Random.Range(0, upgrades.Length);
+            int u = Random.Range(0, upgrades.Count);
             if (!availableUpgrades.Contains(upgrades[u]))
                 availableUpgrades.Add(upgrades[u]);
         }
@@ -37,7 +37,10 @@ public class UpgradeMenu : MonoBehaviour
 
     public void TriggerBuff(int buffIndex)
     {
-        availableUpgrades[buffIndex].ApplyBuff();
+        if (availableUpgrades[buffIndex].ApplyBuff())
+        {
+            upgrades.Remove(availableUpgrades[buffIndex]);
+        }
         Time.timeScale = 1f;
         gameObject.SetActive(false);
     }

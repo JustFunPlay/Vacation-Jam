@@ -125,7 +125,7 @@ public class PlayerControl : MonoBehaviour
         {
             exp++;
             expAmmount--;
-            if (exp % 5 + level == 0)
+            if (exp % 5 + (2 * level) == 0)
             {
                 exp = 0;
                 UpgradeMenu.Instance.ShowUpgrades();
@@ -140,12 +140,12 @@ public class PlayerControl : MonoBehaviour
             case UpgradeableStat.AttackSpeed:
                 attackSpeed += value;
                 break;
-            case UpgradeableStat.CurrenHealth:
+            case UpgradeableStat.CurrentHealth:
                 if (currentHealth == maxHealth)
                     maxHealth++;
                 else
                     currentHealth++;
-                hpText.text = $"{maxHealth}/{currentHealth}";
+                hpText.text = $"{currentHealth}/{maxHealth}";
                 break;
             case UpgradeableStat.Damage:
                 damage++;
@@ -179,9 +179,18 @@ public class PlayerControl : MonoBehaviour
         if (other.TryGetComponent(out EnemyBase enemy) && invulTime <= 0)
         {
             currentHealth--;
-            hpText.text = $"{maxHealth}/{currentHealth}";
+            hpText.text = $"{currentHealth}/{maxHealth}";
             if (currentHealth <= 0)
+            {
                 Debug.Log("Game over");
+                moveInput.Disable();
+                attackInput.Disable();
+                specialInput.Disable();
+                dodgeInput.Disable();
+                keepAttacking = false;
+                moveVector = Vector2.zero;
+                CombatDirector.instance.GameOver();
+            }
                 //Destroy(gameObject);
             invulTime = 1f;
             Collider[] colliders = Physics.OverlapSphere(transform.position, 5);

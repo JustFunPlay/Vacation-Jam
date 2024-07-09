@@ -12,10 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8035ce2abfc9e21419f8068fed4d9202, type: 3}
   m_Name: Health
   m_EditorClassIdentifier: 
-  upgradeName: Heal
-  description: 'Restore 1 point of health.
-
-    If you are at max HP, increase max
-    HP instead'
+  upgradeName: Health
+  description: Restore 1 point of health; If you are at max HP, increase max HP instead
   upgradeableStat: 1
   upgradeAmmount: 1

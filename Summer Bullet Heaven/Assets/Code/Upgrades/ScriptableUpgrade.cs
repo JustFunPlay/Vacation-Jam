@@ -10,20 +10,22 @@ public class ScriptableUpgrade : ScriptableObject
     [SerializeField] private UpgradeableStat upgradeableStat;
     [SerializeField] private float upgradeAmmount;
 
-    public void ApplyBuff()
+    public virtual bool ApplyBuff()
     {
         PlayerControl.CurrentPlayer.UpgradeStat(upgradeableStat, upgradeAmmount);
+        return false;
     }
 }
 
 public enum UpgradeableStat
 {
     AttackSpeed,
-    CurrenHealth,
+    CurrentHealth,
     Damage,
     DashCooldown,
     DashDistance,
     Pierce,
     ProjectileSpeed,
-    Speed
+    Speed,
+    Other
 }
