@@ -7,6 +7,8 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] private int health;
     [SerializeField] private float speed;
     [SerializeField] private int pointRefund = 1;
+    [SerializeField] private int expValue;
+    [SerializeField] private ExpOrb expOrb;
     private Rigidbody rb;
     bool canmove = false;
 
@@ -34,6 +36,8 @@ public class EnemyBase : MonoBehaviour
     }
     private void OnDeath()
     {
+        ExpOrb newOrb = Instantiate(expOrb, transform.position, Quaternion.identity);
+        newOrb.DropExp(expValue);
         CombatDirector.instance.AddPoints(pointRefund);
         Destroy(gameObject);
     }

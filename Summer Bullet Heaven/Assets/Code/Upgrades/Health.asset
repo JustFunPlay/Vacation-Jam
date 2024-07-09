@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8035ce2abfc9e21419f8068fed4d9202, type: 3}
+  m_Name: Health
+  m_EditorClassIdentifier: 
+  upgradeName: Heal
+  description: 'Restore 1 point of health.
+
+    If you are at max HP, increase max
+    HP instead'
+  upgradeableStat: 1
+  upgradeAmmount: 1

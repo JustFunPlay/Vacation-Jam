@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerControl : MonoBehaviour
 {
-    public static PlayerControl CurrentPlayer;
+    public static PlayerControl CurrentPlayer { get; private set; }
     [Header("Input actions")]
     [SerializeField] private InputAction moveInput;
     [SerializeField] private InputAction attackInput;
@@ -18,7 +19,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float moveSpeed = 3;
     [SerializeField] private float attackSpeed = 1;
     [SerializeField] private int damage = 4;
-    [SerializeField] private float dashCooldown = 1;
+    [SerializeField] private float dashCooldownRate = 1;
     [SerializeField] private float dashDistance = 1;
     [SerializeField] private float projectileSpeedModifier = 1;
 
@@ -29,9 +30,13 @@ public class PlayerControl : MonoBehaviour
     bool keepAttacking;
     bool canAttack = true;
     float invulTime;
+    int exp;
+    int level;
+    int bonusProjectilePenetration;
     [Header("Additional stuff")]
     [SerializeField] private Transform shootingThingy;
     [SerializeField] private PlayerProjectile projectile;
+    [SerializeField] private TMPro.TextMeshProUGUI hpText;
 
     private void Awake()
     {
@@ -85,7 +90,7 @@ public class PlayerControl : MonoBehaviour
         while (keepAttacking)
         {
             PlayerProjectile newProjectile = Instantiate(projectile, shootingThingy.position, shootingThingy.rotation);
-            newProjectile.Launch(this, damage, projectileSpeedModifier);
+            newProjectile.Launch(this, damage, projectileSpeedModifier, bonusProjectilePenetration);
             yield return new WaitForSeconds(1f / attackSpeed);
         }
         canAttack = true;
@@ -110,8 +115,58 @@ public class PlayerControl : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
         isDodgeing = false;
-        yield return new WaitForSeconds(dashCooldown);
+        yield return new WaitForSeconds(1/dashCooldownRate);
         canDodge = true;
+    }
+
+    public void GetExp(int expAmmount)
+    {
+        while (expAmmount > 0)
+        {
+            exp++;
+            expAmmount--;
+            if (exp % 5 + level == 0)
+            {
+                exp = 0;
+                UpgradeMenu.Instance.ShowUpgrades();
+            }
+        }
+    }
+
+    public void UpgradeStat(UpgradeableStat stat, float value)
+    {
+        switch (stat)
+        {
+            case UpgradeableStat.AttackSpeed:
+                attackSpeed += value;
+                break;
+            case UpgradeableStat.CurrenHealth:
+                if (currentHealth == maxHealth)
+                    maxHealth++;
+                else
+                    currentHealth++;
+                hpText.text = $"{maxHealth}/{currentHealth}";
+                break;
+            case UpgradeableStat.Damage:
+                damage++;
+                break;
+            case UpgradeableStat.DashCooldown:
+                dashCooldownRate += value;
+                break;
+            case UpgradeableStat.DashDistance:
+                dashDistance += value;
+                break;
+            case UpgradeableStat.Pierce:
+                bonusProjectilePenetration++;
+                break;
+            case UpgradeableStat.ProjectileSpeed:
+                projectileSpeedModifier += value;
+                break;
+            case UpgradeableStat.Speed:
+                moveSpeed += value;
+                break;
+
+        }
     }
 
     public void OnHitEffect(EnemyBase hitTarget)
@@ -124,8 +179,10 @@ public class PlayerControl : MonoBehaviour
         if (other.TryGetComponent(out EnemyBase enemy) && invulTime <= 0)
         {
             currentHealth--;
-            //if (currentHealth <= 0)
-            //    Destroy(gameObject);
+            hpText.text = $"{maxHealth}/{currentHealth}";
+            if (currentHealth <= 0)
+                Debug.Log("Game over");
+                //Destroy(gameObject);
             invulTime = 1f;
             Collider[] colliders = Physics.OverlapSphere(transform.position, 5);
             foreach (Collider collider in colliders)

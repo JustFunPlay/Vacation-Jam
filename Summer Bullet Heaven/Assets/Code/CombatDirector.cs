@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class CombatDirector : MonoBehaviour
 {
-    public static CombatDirector instance;
+    public static CombatDirector instance { get; private set; }
 
     [SerializeField] private int difficultyLevel;
     [SerializeField] private int spawnPoints;
     [SerializeField] private SpawnableEnemy[] spawnableEnemies;
+    [SerializeField] private TMPro.TextMeshProUGUI timeText;
 
     private void Start()
     {
@@ -28,13 +29,14 @@ public class CombatDirector : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
             t++;
-            spawnPoints++;
+            spawnPoints += t % 2;
             if (t % 3 == Random.Range(0, 3))
                 spawnPoints += difficultyLevel;
             if (t % 5 == 0)
                 TrySpawnEnemies();
             if (t % 60 == 0)
                 difficultyLevel++;
+            timeText.text = $"{difficultyLevel}:{t % 60}";
         }
     }
 
