@@ -132,6 +132,7 @@ MonoBehaviour:
   pointRefund: 1
   expValue: 1
   expOrb: {fileID: 7057003850120318330, guid: b119f40e5d1915e45899d421e724d4a0, type: 3}
+  killscore: 50
 --- !u!54 &8075979332368600892
 Rigidbody:
   m_ObjectHideFlags: 0

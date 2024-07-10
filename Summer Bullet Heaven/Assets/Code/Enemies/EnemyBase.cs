@@ -9,6 +9,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] private int pointRefund = 1;
     [SerializeField] private int expValue;
     [SerializeField] private ExpOrb expOrb;
+    [SerializeField] private int killscore;
     private Rigidbody rb;
     bool canmove = false;
 
@@ -39,6 +40,7 @@ public class EnemyBase : MonoBehaviour
         ExpOrb newOrb = Instantiate(expOrb, transform.position, Quaternion.identity);
         newOrb.DropExp(expValue);
         CombatDirector.instance.AddPoints(pointRefund);
+        CombatDirector.instance.AddHighScore(killscore);
         Destroy(gameObject);
     }
     public void GetKnockedBack()

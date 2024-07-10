@@ -14,6 +14,12 @@ public class CombatDirector : MonoBehaviour
     [SerializeField] private TMPro.TextMeshProUGUI timeText;
     [SerializeField] private GameObject gameOverScreen;
     [SerializeField] private TMPro.TextMeshProUGUI gameOverText;
+    [SerializeField] private TMPro.TextMeshProUGUI HighScoreText;
+
+
+    private int scoreEarned;
+    private int timePlayed;
+    private bool gameOver;
 
     private void Start()
     {
@@ -27,19 +33,23 @@ public class CombatDirector : MonoBehaviour
     private IEnumerator Director()
     {
         yield return null;
-        int t = 0;
-        while (true)
+        timePlayed = 0;
+        while (!gameOver)
         {
             yield return new WaitForSeconds(1);
-            t++;
-            spawnPoints += t % 2;
-            if (t % 3 == Random.Range(0, 3))
+            timePlayed++;
+            AddHighScore(10);
+            spawnPoints += timePlayed % 2;
+            if (timePlayed % 3 == Random.Range(0, 3))
                 spawnPoints += 2 + difficultyLevel;
-            if (t % 5 == 0)
+            if (timePlayed % 5 == 0)
                 TrySpawnEnemies();
-            if (t % 60 == 0)
+            if (timePlayed % 60 == 0)
+            {
                 difficultyLevel++;
-            timeText.text = $"{difficultyLevel}:{t % 60}";
+                AddHighScore(difficultyLevel * 100);
+            }
+            timeText.text = $"{difficultyLevel}:{timePlayed % 60}";
         }
     }
 
@@ -74,10 +84,20 @@ public class CombatDirector : MonoBehaviour
                 keepSpawning = false;
         }
     }
+
+    public void AddHighScore(int score)
+    {
+        if (gameOver) return;
+        scoreEarned += score;
+        HighScoreText.text = $"Score: {scoreEarned}";
+    }
     public void GameOver()
     {
+        if (gameOver) return;
+        gameOver = true;
         gameOverScreen.SetActive(true);
-        //gameOverText.text = $"You survived for {difficultyLevel} minutes and {}
+        gameOverText.text = $"You survived for {difficultyLevel} minutes and {timePlayed % 60} seconds\nYou have earned a total of {scoreEarned} points";
+        HighScoreTracker.UpdateHighScores(scoreEarned);
     }
     public void Exit()
     {

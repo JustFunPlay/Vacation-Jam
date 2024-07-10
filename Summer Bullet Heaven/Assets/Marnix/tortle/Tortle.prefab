@@ -160,6 +160,7 @@ MonoBehaviour:
   pointRefund: 3
   expValue: 3
   expOrb: {fileID: 7057003850120318330, guid: b119f40e5d1915e45899d421e724d4a0, type: 3}
+  killscore: 200
 --- !u!95 &-9093672814896343700
 Animator:
   serializedVersion: 5
